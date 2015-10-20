@@ -29,9 +29,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         myButton = (Button) findViewById(R.id.button);
         myButton.setOnClickListener(this);
 
-        edit_text   = (EditText)findViewById(R.id.celebrity_name);
+        edit_text = (EditText) findViewById(R.id.celebrity_name);
 
-        image = (ImageView)findViewById(R.id.img);
+        image = (ImageView) findViewById(R.id.img);
+        image.setTag("yes");
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -67,13 +69,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        String celebrity = edit_text.getText().toString();
+        String image_name = edit_text.getText().toString();
         edit_text.setText("");
-        // comment 
+        if (image.getTag() ==  "yes") {
+            image.setImageResource(R.mipmap.planet);
+            image.setTag("no");
+        } else {
+            image.setImageResource(R.mipmap.ic_launcher);
+            image.setTag("yes");
+        }
 
     }
-
-
-
 
 }
