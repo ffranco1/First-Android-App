@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         String celebrity = edit_text.getText().toString();
         edit_text.setText("");
+        // comment 
 
     }
 
