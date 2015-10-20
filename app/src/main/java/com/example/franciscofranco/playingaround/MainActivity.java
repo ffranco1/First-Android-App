@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         String sms = edit_text.getText().toString();
         edit_text.setText("");
-        String phoneNo = "8186603057";
+        String phoneNo = "3109180124";
 
         try {
             SmsManager smsManager = SmsManager.getDefault();
