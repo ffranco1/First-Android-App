@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -27,7 +28,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button myButton;
     EditText edit_text;
     ImageView image;
-    private static final String QUERY_URL = "http://netflixroulette.net/api/api.php?director=";
+    private static final String KEY = "";
+//    private static final String QUERY_URL = "http://api.rottentomatoes.com/api/public/v1.0.json?" + KEY;
+    private static final String QUERY_URL ="http://openlibrary.org/search.json?q=";
 
 
     @Override
@@ -78,18 +81,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        queryBooks(edit_text.getText().toString());
+        makeRequest(edit_text.getText().toString());
     }
 
-    private void queryBooks(String searchString) {
+    private void makeRequest(String searchString) {
 
         // Prepare your search string to be put in a URL
         // It might have reserved characters or something
+        final String myjson;
         String urlString = "";
         try {
-            urlString = URLEncoder.encode(searchString, "UTF-8").replace("+", "%20");
-
-            Log.d("LOG", QUERY_URL+urlString);
+//            urlString = URLEncoder.encode(searchString, "UTF-8").replace("+", "%20");
+            urlString = URLEncoder.encode(searchString, "UTF-8");
 
         } catch (UnsupportedEncodingException e) {
 
@@ -103,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // Have the client get a JSONArray of data
         // and define how to respond
-        Log.d("LOG", "about to do get request");
+
         client.get(QUERY_URL + urlString,
                 new JsonHttpResponseHandler() {
 
@@ -113,9 +116,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // Display a "Toast" message
                         // to announce your success
                         Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
+                        try {
+//                            Log.d("LOG", jsonObject.getJSONObject("docs").getString("movies"));
+//                            Log.d("LOG", jsonObject.optJSONArray("docs").getJSONArray(1).getString(3));
+//                            Log.d("LOG", jsonObject.optJSONArray("docs").optJSONObject(1).getString("cover_i"));
+                            String img_url = "http://covers.openlibrary.org/b/id/" +
+                                    jsonObject.optJSONArray("docs").optJSONObject(1).getString("cover_i") + "-L.jpg";
 
-                        // 8. For now, just log results
-                        Log.d("LOG", jsonObject.toString());
+                            Log.d("LOG",img_url);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -129,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.e("LOG", statusCode + " " + throwable.getMessage());
                     }
                 });
-        Log.d("LOG", "finished request");
+
     }
 
 }
