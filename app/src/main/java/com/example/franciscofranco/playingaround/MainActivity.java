@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,7 +124,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             String img_url = "http://covers.openlibrary.org/b/id/" +
                                     jsonObject.optJSONArray("docs").optJSONObject(1).getString("cover_i") + "-L.jpg";
 
-                            Log.d("LOG",img_url);
+                            Log.d("LOG", img_url);
+                            Picasso.with(getApplicationContext()).load(img_url).placeholder(R.mipmap.ic_launcher).into(image);
 
                         } catch (JSONException e) {
                             e.printStackTrace();
