@@ -5,18 +5,33 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button myButton;
     EditText edit_text;
     ImageView image;
+    private static final String KEY = "";
+//    private static final String QUERY_URL = "http://api.rottentomatoes.com/api/public/v1.0.json?" + KEY;
+    private static final String QUERY_URL ="http://openlibrary.org/search.json?q=";
 
 
     @Override
@@ -67,13 +82,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        String celebrity = edit_text.getText().toString();
-        edit_text.setText("");
-        // comment 
-
+        makeRequest(edit_text.getText().toString());
     }
 
+    private void makeRequest(String searchString) {
+
+        // Prepare your search string to be put in a URL
+        // It might have reserved characters or something
+        final String myjson;
+        String urlString = "";
+        try {
+//            urlString = URLEncoder.encode(searchString, "UTF-8").replace("+", "%20");
+            urlString = URLEncoder.encode(searchString, "UTF-8");
+
+        } catch (UnsupportedEncodingException e) {
+
+            // if this fails for some reason, let the user know why
+            e.printStackTrace();
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        // Create a client to perform networking
+        AsyncHttpClient client = new AsyncHttpClient();
+
+        // Have the client get a JSONArray of data
+        // and define how to respond
+
+        client.get(QUERY_URL + urlString,
+                new JsonHttpResponseHandler() {
 
 
+                    @Override
+                    public void onSuccess(JSONObject jsonObject) {
+                        // Display a "Toast" message
+                        // to announce your success
+                        Toast.makeText(getApplicationContext(), "Success!", Toast.LENGTH_LONG).show();
+                        try {
+//                            Log.d("LOG", jsonObject.getJSONObject("docs").getString("movies"));
+//                            Log.d("LOG", jsonObject.optJSONArray("docs").getJSONArray(1).getString(3));
+//                            Log.d("LOG", jsonObject.optJSONArray("docs").optJSONObject(1).getString("cover_i"));
+                            String img_url = "http://covers.openlibrary.org/b/id/" +
+                                    jsonObject.optJSONArray("docs").optJSONObject(1).getString("cover_i") + "-L.jpg";
+
+                            Log.d("LOG", img_url);
+                            Picasso.with(getApplicationContext()).load(img_url).placeholder(R.mipmap.ic_launcher).into(image);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Throwable throwable, JSONObject error) {
+                        // Display a "Toast" message
+                        // to announce the failure
+                        Toast.makeText(getApplicationContext(), "Error: " + statusCode + " " + throwable.getMessage(), Toast.LENGTH_LONG).show();
+
+                        // Log error message
+                        // to help solve any problems
+                        Log.e("LOG", statusCode + " " + throwable.getMessage());
+                    }
+                });
+
+    }
 
 }

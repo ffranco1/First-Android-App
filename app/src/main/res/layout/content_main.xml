@@ -16,6 +16,14 @@
         android:hint="@string/prompt"
         android:inputType="text" />
 
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher"
+        android:layout_below="@id/celebrity_name"/>
+
     <Button
         android:id="@+id/button"
         android:layout_height="wrap_content"
@@ -24,11 +32,7 @@
         android:layout_centerVertical="true"
         android:text="@string/button" />
 
-    <ImageView
-        android:id="@+id/img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_below="@id/button"/>
+
+
 
 </RelativeLayout>
